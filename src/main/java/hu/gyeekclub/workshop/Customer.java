@@ -1,5 +1,7 @@
 package hu.gyeekclub.workshop;
 
+import bills.BillBuilder;
+import hu.gyeekclub.workshop.movies.Movie;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -30,30 +32,13 @@ public class Customer {
         return name;
     }
 
-    public String statement() {
-        double totalAmount = 0;
-        int frequentRenterPoints = 0;
-        Enumeration rentals = this.rentals.elements();
-        String result = "Rental Record for " + getName() + "\n";
-        while (rentals.hasMoreElements()) {
-            Rental each = (Rental) rentals.nextElement();
-            //determine amounts for each line
-
-            double thisAmount = each.getAmountByTypeAndDay();
-
-            // add frequent renter points
-            frequentRenterPoints++;
-            // add bonus for a two day new release rental
-            if ((each.getMovie().getPriceCode() == Movie.MovieTypes.NEW_RELEASE) && each.getDaysRented() > 1) {
-                frequentRenterPoints++;
-            }
-            //show figures for this rental
-            result += "\t" + each.getMovie().getTitle() + "\t" + String.valueOf(thisAmount) + "\n";
-            totalAmount += thisAmount;
-        }
-        //add footer lines
-        result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
-        result += "You earned " + String.valueOf(frequentRenterPoints) + " frequent renter points";
-        return result;
+    public String getOwnBill() {
+        BillBuilder ownBill=new BillBuilder(name);
+        rentals.stream().forEach(rental->{
+            ownBill.addRentalItem(rental.getMovie().getTitle(),
+                    rental.getPriceByMovieTypeAndDay(),
+                    rental.getLoyaltyPointsByMovieTypeAndDay());
+        });
+        return ownBill.buildBill();
     }
 }
