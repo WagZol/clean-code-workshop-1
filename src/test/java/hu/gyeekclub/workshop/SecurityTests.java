@@ -1,5 +1,8 @@
 package hu.gyeekclub.workshop;
 
+import hu.gyeekclub.workshop.movies.MovieFactory;
+import hu.gyeekclub.workshop.movies.MovieTypes;
+import hu.gyeekclub.workshop.movies.RegularMovie;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -12,24 +15,44 @@ public class SecurityTests {
     @Test
     public void nullConstructorTest() {
         assertThrows(
-            IllegalArgumentException.class,
-            () -> {
-                new Customer(null);
-                new Movie(null, Movie.MovieTypes.REGULAR);
-                new Rental(null, 0);
-            },
-            "Do not allow null parameters to stay unpunished."
+                IllegalArgumentException.class,
+                () -> {
+                    new Customer(null);
+                    MovieFactory.createFilm(MovieTypes.REGULAR, null);
+                },
+                "Do not allow null parameters to stay unpunished."
         );
     }
 
     @Test
     public void nullParameterTest() {
         assertThrows(
-            IllegalArgumentException.class,
-            () -> {
-                new Customer("Test").addRental(null);
-            },
-            "No not allow null parameters to stay unpunished."
+                IllegalArgumentException.class,
+                () -> {
+                    new Customer("Test").addRental(null);
+                },
+                "No not allow null parameters to stay unpunished."
+        );
+    }
+
+    @Test
+    public void negativeDayTest() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> {
+                    new Rental(new RegularMovie("It"), -1);
+                },
+                "Not allow negative days."
+        );
+    }
+    
+    public void nullDayTest() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> {
+                    new Rental(new RegularMovie("Thing"), 0);
+                },
+                "Not allow null days."
         );
     }
 
