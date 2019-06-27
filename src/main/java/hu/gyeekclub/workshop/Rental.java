@@ -1,5 +1,7 @@
 package hu.gyeekclub.workshop;
 
+import hu.gyeekclub.workshop.movies.Movie;
+
 public class Rental {
 
 	private Movie movie;
@@ -8,6 +10,7 @@ public class Rental {
 
 	public Rental(Movie movie, int daysRented) {
 		this.movie = movie;
+                checkNegativeDays(daysRented);
 		this.daysRented = daysRented;
 	}
 
@@ -19,26 +22,17 @@ public class Rental {
 		return movie;
 	}
         
-        public double getAmountByTypeAndDay(){
-            double amount=0;
-            switch (movie.getPriceCode()) {
-                case REGULAR:
-                    amount += 2;
-                    if (daysRented > 2) {
-                        amount += (daysRented - 2) * 1.5;
-                    }
-                    break;
-                case NEW_RELEASE:
-                    amount += daysRented * 3;
-                    break;
-                case CHILDRENS:
-                    amount += 1.5;
-                    if (daysRented > 3) {
-                        amount += (daysRented - 3) * 1.5;
-                    }
-                    break;
+        public double getPriceByMovieTypeAndDay(){
+            return movie.getPriceByRentalDays(daysRented);   
+        }
+        
+        public int getLoyaltyPointsByMovieTypeAndDay(){
+            return (movie.getLoyaltyPoints() && daysRented>1?2:1);
+        }
+        
+        private void checkNegativeDays(int daysRented){
+            if (daysRented<=0){
+                throw new IllegalArgumentException();
             }
-            return amount;
-            
         }
 }
