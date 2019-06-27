@@ -1,12 +1,17 @@
 package hu.gyeekclub.workshop;
 
+import hu.gyeekclub.workshop.movies.Movie;
+import hu.gyeekclub.workshop.movies.MovieFactory;
+import hu.gyeekclub.workshop.movies.MovieTypes;
+
 public class Main {
 
 	public static void main(String[] args) {
 		// create movies
-		Movie movie1 = new Movie("Horrora akadva", Movie.MovieTypes.REGULAR);
-		Movie movie2 = new Movie("Halálos iramban", Movie.MovieTypes.NEW_RELEASE);
-		Movie movie3 = new Movie("Egyszer volt, hol nem volt", Movie.MovieTypes.CHILDRENS);
+                
+		Movie movie1 = MovieFactory.createFilm(MovieTypes.REGULAR, "Horrora akadva");
+		Movie movie2 = MovieFactory.createFilm(MovieTypes.NEW_RELEASE, "Halálos iramban");
+		Movie movie3 = MovieFactory.createFilm(MovieTypes.CHILDRENS, "Egyszer volt, hol nem volt");
 
 		// create rentals
 		Rental rental1 = new Rental(movie1, 4);
@@ -33,13 +38,13 @@ public class Main {
 		// print results
 		String result;
 
-		result = customer1.statement();
+		result = customer1.getOwnBill();
 		System.out.println(result);
 
-		result = customer2.statement();
+		result = customer2.getOwnBill();
 		System.out.println(result);
 
-		result = customer3.statement();
+		result = customer3.getOwnBill();
 		System.out.println(result);
 	}
 }
